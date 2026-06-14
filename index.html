@@ -1,93 +1,37 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ja">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   <title>Re:Block - One File Final</title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2113.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 33.6px; font: 33.6px 'Hiragino Sans'; color: #266c26; -webkit-text-stroke: #266c26; background-color: #fffdef; background-color: rgba(255, 253, 239, 0.4)}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 33.6px; font: 33.6px 'Hiragino Sans'; color: #266c26; -webkit-text-stroke: #266c26; background-color: #fffdef; background-color: rgba(255, 253, 239, 0.4); min-height: 51.0px}
-    span.s1 {font-kerning: none; text-shadow: 2.0px 2.0px 0.0px #ffffff}
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Quicksand:wght@500;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg-top: #FFFDF2; --bg-bottom: #FFF3B0; --panel-bg: rgba(255,255,255,.86); --panel-border: rgba(255,255,255,.96);
+      --text-main: #5D4037; --text-accent: #2E7D32; --shadow-soft: 0 8px 28px rgba(93,64,55,.10);
+      --btn-color: #4caf50; --btn-hover: #43a047; --color-bottle: #0288d1; --color-can: #e65100; --color-paper: #33691e;
+      --rank-purple: #8E24AA; --danger: #d32f2f;
+    }
+    * { margin: 0; padding: 0; box-shadow: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif; color: var(--text-main); overflow: hidden;
+      background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
+      background-image: radial-gradient(rgba(255,255,255,.8) 2px, transparent 2px), radial-gradient(rgba(255,255,255,.55) 2px, transparent 2px);
+      background-size: 40px 40px, 60px 60px; background-position: 0 0, 20px 20px;
+    }
+    .screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; }
+    .game-title { font-family: 'Quicksand', sans-serif; font-size: clamp(2.7rem, 10vw, 4.6rem); font-weight: 900; color: var(--text-accent); text-shadow: 2px 2px 0 #fff; }
+    .eco-btn { margin-top: 14px; background: var(--btn-color); color: #fff; border: none; border-radius: 999px; padding: 14px 34px; cursor: pointer; font-weight: 900; font-size: clamp(1.05rem, 4vw, 1.35rem); box-shadow: 0 6px 18px rgba(76,175,80,.35); }
+    #game-screen { display: none; }
   </style>
 </head>
 <body>
-<p class="p1"><span class="s1"><b>&lt;!DOCTYPE html&gt;</b></span></p>
-<p class="p1"><span class="s1"><b>&lt;html lang="ja"&gt;</b></span></p>
-<p class="p1"><span class="s1"><b>&lt;head&gt;</b></span></p>
-<p class="p1"><span class="s1"><b>&lt;meta charset="UTF-8"&gt;</b></span></p>
-<p class="p1"><span class="s1"><b>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no"&gt;</b></span></p>
-<p class="p1"><span class="s1"><b>&lt;title&gt;Re:Block - One File Final&lt;/title&gt;</b></span></p>
-<p class="p1"><span class="s1"><b>&lt;link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&amp;family=Quicksand:wght@500;700;900&amp;display=swap" rel="stylesheet"&gt;</b></span></p>
-<p class="p1"><span class="s1"><b>&lt;script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"&gt;&lt;/script&gt;</b></span></p>
-<p class="p1"><span class="s1"><b>&lt;style&gt;</b></span></p>
-<p class="p1"><span class="s1"><b>:root{</b></span></p>
-<p class="p1"><span class="s1"><b><span class="Apple-converted-space">  </span>--bg-top:#FFFDF2; --bg-bottom:#FFF3B0; --panel-bg:rgba(255,255,255,.86); --panel-border:rgba(255,255,255,.96);</b></span></p>
-<p class="p1"><span class="s1"><b><span class="Apple-converted-space">  </span>--text-main:#5D4037; --text-accent:#2E7D32; --shadow-soft:0 8px 28px rgba(93,64,55,.10);</b></span></p>
-<p class="p1"><span class="s1"><b><span class="Apple-converted-space">  </span>--btn-color:#4caf50; --btn-hover:#43a047; --color-bottle:#0288d1; --color-can:#e65100; --color-paper:#33691e;</b></span></p>
-<p class="p1"><span class="s1"><b><span class="Apple-converted-space">  </span>--rank-purple:#8E24AA; --danger:#d32f2f;</b></span></p>
-<p class="p1"><span class="s1"><b>}</b></span></p>
-<p class="p1"><span class="s1"><b>*{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}</b></span></p>
-<p class="p1"><span class="s1"><b>html,body{height:100%}</b></span></p>
-<p class="p1"><span class="s1"><b>body{</b></span></p>
-<p class="p1"><span class="s1"><b><span class="Apple-converted-space">  </span>font-family:'Noto Sans JP',sans-serif; color:var(--text-main); overflow:hidden;</b></span></p>
-<p class="p1"><span class="s1"><b><span class="Apple-converted-space">  </span>background:linear-gradient(135deg,var(--bg-top),var(--bg-bottom));</b></span></p>
-<p class="p1"><span class="s1"><b><span class="Apple-converted-space">  </span>background-image:radial-gradient(rgba(255,255,255,.8) 2px,transparent 2px),radial-gradient(rgba(255,255,255,.55) 2px,transparent 2px);</b></span></p>
-<p class="p1"><span class="s1"><b><span class="Apple-converted-space">  </span>background-size:40px 40px,60px 60px; background-position:0 0,20px 20px;</b></span></p>
-<p class="p1"><span class="s1"><b>}</b></span></p>
-<p class="p1"><span class="s1"><b>.eco-font{font-family:'Quicksand',sans-serif}</b></span></p>
-<p class="p1"><span class="s1"><b>.glass{background:var(--panel-bg);border:2px solid var(--panel-border);border-radius:18px;box-shadow:var(--shadow-soft);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}</b></span></p>
-<p class="p1"><span class="s1"><b>.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px}</b></span></p>
-<p class="p1"><span class="s1"><b>button{font-family:inherit}</b></span></p>
-<p class="p2"><span class="s1"><b></b></span><br></p>
-<p class="p1"><span class="s1"><b>#title-screen{background:rgba(255,253,242,.40);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}</b></span></p>
-<p class="p1"><span class="s1"><b>.game-title{font-family:'Quicksand',sans-serif;font-size:clamp(2.7rem,10vw,4.6rem);line-height:1;font-weight:900;color:var(--text-accent);text-shadow:2px 2px 0 #fff,0 4px 10px rgba(0,0,0,.1);white-space:nowrap}</b></span></p>
-<p class="p1"><span class="s1"><b>.subtitle{margin-top:10px;color:#558b2f;font-weight:700;font-size:clamp(.92rem,3.5vw,1.18rem)}</b></span></p>
-<p class="p1"><span class="s1"><b>.title-icons-box{display:flex;gap:12px;align-items:flex-start;justify-content:center;margin-top:20px;padding:14px 16px;width:min(680px,94vw)}</b></span></p>
-<p class="p1"><span class="s1"><b>.title-icon-item{display:flex;flex-direction:column;align-items:center;text-align:center;flex:1;min-width:0}</b></span></p>
-<p class="p1"><span class="s1"><b>.title-icon-item canvas{width:72px;height:72px}</b></span></p>
-<p class="p1"><span class="s1"><b>.mud-guide{margin-top:6px;line-height:1.35;font-size:clamp(.74rem,2.8vw,.92rem);font-weight:800}</b></span></p>
-<p class="p1"><span class="s1"><b>.title-warning{margin-top:18px;color:var(--danger);font-weight:900;font-size:clamp(.9rem,3.5vw,1.03rem);text-align:center}</b></span></p>
-<p class="p1"><span class="s1"><b>.eco-btn{margin-top:14px;background:var(--btn-color);color:#fff;border:none;border-radius:999px;padding:14px 34px;cursor:pointer;font-weight:900;font-size:clamp(1.05rem,4vw,1.35rem);box-shadow:0 6px 18px rgba(76,175,80,.35);transition:all .18s ease}</b></span></p>
-<p class="p1"><span class="s1"><b>.eco-btn:hover{background:var(--btn-hover);transform:translateY(-1px)}</b></span></p>
-<p class="p1"><span class="s1"><b>.link-card{margin-top:18px;width:min(480px,94vw);padding:16px 18px;text-align:center}</b></span></p>
-<p class="p1"><span class="s1"><b>.link-card-title{font-size:1.2rem;font-weight:900;color:var(--rank-purple)}</b></span></p>
-<p class="p1"><span class="s1"><b>.link-card-sub{margin-top:8px;color:#7b5e57;font-weight:700;line-height:1.45;font-size:.92rem}</b></span></p>
-<p class="p1"><span class="s1"><b>.link-card-btn{display:inline-flex;margin-top:12px;background:none;border:none;color:#8E24AA;font-weight:900;cursor:pointer}</b></span></p>
-<p class="p2"><span class="s1"><b></b></span><br></p>
-<p class="p1"><span class="s1"><b>#game-screen{display:none;height:100vh;width:100vw;padding:10px;gap:16px;align-items:stretch;justify-content:center}</b></span></p>
-<p class="p1"><span class="s1"><b>#hud-left,#hud-right{display:flex;flex-direction:column;gap:12px}</b></span></p>
-<p class="p1"><span class="s1"><b>#hud-left{width:220px} #hud-right{width:240px}</b></span></p>
-<p class="p1"><span class="s1"><b>.box{padding:14px;text-align:center}</b></span></p>
-<p class="p1"><span class="s1"><b>.hud-label{font-size:1rem;color:#8D6E63;font-weight:900;letter-spacing:1px;margin-bottom:4px}</b></span></p>
-<p class="p1"><span class="s1"><b>.hud-value{font-size:2.05rem;font-weight:900;color:var(--text-accent);transition:transform .2s}</b></span></p>
-<p class="p1"><span class="s1"><b>.hud-value.pop{transform:scale(1.12);color:#ff9800}</b></span></p>
-<p class="p1"><span class="s1"><b>#game-container{padding:10px;display:flex;align-items:center;justify-content:center}</b></span></p>
-<p class="p1"><span class="s1"><b>#game-canvas{display:block;border-radius:8px;background:rgba(255,255,255,.82);touch-action:none}</b></span></p>
-<p class="p1"><span class="s1"><b>#next-canvas,#next-canvas-mobile{display:block;margin:0 auto}</b></span></p>
-<p class="p1"><span class="s1"><b>#mobile-next-box{display:none}</b></span></p>
-<p class="p1"><span class="s1"><b>#action-box{flex:1;display:flex;flex-direction:column;gap:10px;padding:12px}</b></span></p>
-<p class="p1"><span class="s1"><b>#recycle-bins-container{display:flex;flex-direction:column;gap:10px;flex:1;order:1}</b></span></p>
-<p class="p1"><span class="s1"><b>.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;order:2}</b></span></p>
-<p class="p1"><span class="s1"><b>.bin-slot{flex:1;min-height:94px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:14px;background:rgba(255,255,255,.54);border:3px dashed rgba(93,64,55,.22);transition:all .2s}</b></span></p>
-<p class="p1"><span class="s1"><b>#bin-1{border-color:rgba(2,136,209,.48)} #bin-2{border-color:rgba(230,81,0,.48)} #bin-3{border-color:rgba(51,105,30,.48)}</b></span></p>
-<p class="p1"><span class="s1"><b>.bin-slot.drag-over{transform:scale(1.04);background:rgba(255,255,255,.94);border-style:solid}</b></span></p>
-<p class="p1"><span class="s1"><b>.bin-icon{font-size:3rem;filter:drop-shadow(0 4px 6px rgba(0,0,0,.1));pointer-events:none}</b></span></p>
-<p class="p1"><span class="s1"><b>.bin-label{margin-top:4px;font-weight:900;font-size:.9rem;pointer-events:none}</b></span></p>
-<p class="p1"><span class="s1"><b>#bin-1 .bin-label{color:var(--color-bottle)} #bin-2 .bin-label{color:var(--color-can)} #bin-3 .bin-label{color:var(--color-paper)}</b></span></p>
-<p class="p1"><span class="s1"><b>.ctrl-btn{border:none;border-radius:14px;background:rgba(255,255,255,.95);min-height:56px;font-size:1.45rem;color:#5D4037;box-shadow:0 4px 6px rgba(93,64,55,.1);cursor:pointer}</b></span></p>
-<p class="p1"><span class="s1"><b>.ctrl-btn:active{transform:scale(.96);background:#e8e8e8}</b></span></p>
-<p class="p1"><span class="s1"><b>#btn-rot{color:var(--text-accent);font-weight:900}</b></span></p>
-<p class="p1"><span class="s1"><b>#btn-ranking-open{margin-top:4px;border:none;background:transparent;color:#8E24AA;font-weight:900;cursor:pointer}</b></span></p>
-<p class="p2"><span class="s1"><b></b></span><br></p>
-<p class="p1"><span class="s1"><b>#gameover-screen{display:none;background:rgba(255,253,242,.92);backdrop-filter:blur(10px);z-index:100}</b></span></p>
-<p class="p1"><span class="s1"><b>#tip-screen{display:none;background:rgba(255,253,242,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:95}</b></span></p>
-<p class="p1"><span class="s1"><b>.tip-card{padding:22px 20px;max-width:min(560px,92vw);text-align:center}</b></span></p>
-<p class="p1"><span class="s1"><b>.tip-badge{display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border-radius:999px;background:linear-gradient(135deg,#e8f5e9,#fff8e1);color:#2E7D32;font-weight:900;letter-spacing:.04em;margin-bottom:12px}</b></span></p>
-<p class="p1"><span class="s1"><b>.tip-icon{font-size:3.2rem;line-height:1;margin-bottom:10px;filter:drop-shadow(0 6px 12px rgba(0,0,0,.08))}</b></span></p>
-<p class="p1"><span class="s1"><b>.tip-title{font-size:clamp(1.35rem,5vw,1.9rem);font-weight:900;color:var(--text-accent)}</b></span></p>
-<p class="p1"><span class="s1"><b>.tip-body{margin-top:10px;line-height:1.75;font-size:1rem;font-weight:700;color:#6d4c41;white-space:pre-wrap}</b></span></p>
-<p class="p1"><span class="s1"><b>.tip-note</b></span></p>
+  <div id="title-screen" class="screen">
+    <h1 class="game-title">Re:Block</h1>
+    <p style="margin-top: 10px; font-weight: 700;">落ち物リサイクルパズルゲーム</p>
+    <button class="eco-btn" onclick="alert('ゲームを新しく読み込みます。保存完了後に遊べます！')">START GAME</button>
+  </div>
 </body>
 </html>
