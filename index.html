@@ -149,6 +149,8 @@ button{font-family:inherit}
   .eco-btn{font-size:1.1rem;padding:13px 26px}
   .title-icons-box{width:min(360px,95vw)}
 }
+.lang-btn{margin-top:8px;background:none;border:2px solid #8E24AA;color:#8E24AA;border-radius:999px;padding:8px 20px;cursor:pointer;font-weight:900;font-size:.92rem;transition:all .18s}
+.lang-btn:hover{background:#8E24AA;color:#fff}
 </style>
 </head>
 <body>
@@ -163,6 +165,7 @@ button{font-family:inherit}
   </div>
   <div class="title-warning">⚠️ 分別を間違えると即ゲームオーバー！</div>
   <button id="btn-start" class="eco-btn">START RECYCLING</button>
+  <button class="lang-btn" id="btn-lang" onclick="switchLang()">🌐 English</button>
   <div class="link-card glass">
     <div class="link-card-title eco-font">SCORE RANKING</div>
     <div class="link-card-sub">TOP3 はアップサイクル景品を獲得。まずはここを目指そう！</div>
@@ -270,6 +273,17 @@ const LEVEL_INTERVAL_MS = 30000;
 const MAX_SPEED_LEVEL = 10;
 const LEVEL_SPEEDS = {1:1000,2:820,3:680,4:560,5:470,6:400,7:340,8:290,9:250,10:210};
 const LEVEL_SCORE_MULTIPLIERS = {1:1.00,2:1.10,3:1.20,4:1.35,5:1.50,6:1.65,7:1.80,8:1.95,9:2.10,10:2.30};
+
+/* === i18n 多言語対応 === */
+let currentLang=localStorage.getItem('reblock-lang')||'ja';
+const I18N={
+ja:{langBtn:'🌐 English',bottleGuide:'PETボトル<br>→ 👕 フリース',canGuide:'アルミ缶<br>→ 🚲 自転車',paperGuide:'古紙<br>→ 📓 ノート',warning:'⚠️ 分別を間違えると即ゲームオーバー！',rankCardSub:'TOP3 はアップサイクル景品を獲得。まずはここを目指そう！',rankCardBtn:'ランキングを見る',bin1:'PETボトル',bin2:'アルミ缶',bin3:'古紙',rankOpen:'SCORE RANKING',tipBadge:'RECYCLE TIP',tipTitleDefault:'分別すると、資源はもう一度使える！',tipBodyDefault:'ここに豆知識が表示されます。',tipNote:'※自治体や回収拠点によって出し方が異なる場合があります。表示のあとにゲームオーバー画面へ進みます。',tipContinue:'ゲームオーバーを見る',goReasonDefault:'分別エラー！',goSaveSub:'保存後はランキング画面で確認できます。',namePh:'名前を入力（例：YOSUKE）',rankSub:'Re:Block のスコアランキングです。TOP3 はアップサイクル景品を獲得する想定です。',closeRank:'ゲームに戻る',rankNote:'🥇 1位：再生素材トートバッグ<br>🥈 2位：再生PETポーチ<br>🥉 3位：再生紙ノート',loading:'読み込み中…',loadFail:'読み込みに失敗しました。通信状況をご確認ください。',offline:'オフラインモード：ランキングサーバーに接続中です…しばらくお待ちください。',noRanking:'まだランキングがありません',prizeLabel:'景品',saveAlready:'このスコアは保存済みです。',saving:'保存中…',saveOk:'スコアを全国ランキングに保存しました。ランキングで確認できます。',saveFail:'保存に失敗しました。通信状況をご確認のうえ、もう一度お試しください。',saveFailOffline:'ランキングサーバーに接続できていません。時間をおいて再度お試しください。',checking:'判定中…',promptOffline:(lv)=>`オフラインモード：ランキングサーバーに接続中です。保存ボタンで再試行できます（到達 Lv.${lv}）。`,promptFail:(lv)=>`ランキングに接続できませんでした。通信状況をご確認のうえ、保存をお試しください（到達 Lv.${lv}）。`,promptChance:(lv)=>`ランキング入りのチャンス！到達 Lv.${lv} で保存できます。`,promptSave:(lv)=>`保存すると全国ランキングに反映されます（到達 Lv.${lv}）。`,overflow:'ブロックが溢れました！\n(BOX FULL)',wrongSort:()=> '分別エラー！\n違う箱に捨ててしまった！'},
+en:{langBtn:'🌐 日本語',bottleGuide:'PET Bottle<br>→ 👕 Fleece',canGuide:'Aluminum Can<br>→ 🚲 Bicycle',paperGuide:'Waste Paper<br>→ 📓 Notebook',warning:'⚠️ Wrong sorting = instant game over!',rankCardSub:'Top 3 win upcycled prizes. Aim for the top!',rankCardBtn:'View Ranking',bin1:'PET Bottle',bin2:'Aluminum Can',bin3:'Waste Paper',rankOpen:'SCORE RANKING',tipBadge:'RECYCLE TIP',tipTitleDefault:'Sorted resources can be used again!',tipBodyDefault:'Recycling trivia will appear here.',tipNote:'Rules may vary by municipality or collection point. After this screen, the game over screen will appear.',tipContinue:'View Game Over',goReasonDefault:'Sorting error!',goSaveSub:'After saving, check your score on the ranking screen.',namePh:'Enter name (e.g. YOSUKE)',rankSub:'Re:Block score ranking. Top 3 are planned to receive upcycled prizes.',closeRank:'Back to Game',rankNote:'🥇 1st: Recycled Material Tote Bag<br>🥈 2nd: Recycled PET Pouch<br>🥉 3rd: Recycled Paper Notebook',loading:'Loading…',loadFail:'Failed to load. Please check your connection.',offline:'Offline mode: Connecting to the ranking server… please wait.',noRanking:'No ranking entries yet',prizeLabel:'Prize',saveAlready:'This score has already been saved.',saving:'Saving…',saveOk:'Score saved to the national ranking. Check it on the ranking screen.',saveFail:'Failed to save. Please check your connection and try again.',saveFailOffline:'Ranking server is not connected. Please try again later.',checking:'Checking…',promptOffline:(lv)=>`Offline mode: Connecting to the ranking server. You can retry with SAVE SCORE (Reached Lv.${lv}).`,promptFail:(lv)=>`Could not connect to the ranking server. Please check your connection and try saving again (Reached Lv.${lv}).`,promptChance:(lv)=>`Ranking chance! You can save your score at Lv.${lv}.`,promptSave:(lv)=>`Save to submit this score to the national ranking (Reached Lv.${lv}).`,overflow:'Blocks overflowed!\n(BOX FULL)',wrongSort:()=> 'Sorting error!\nYou put it in the wrong bin!'}};
+const RECYCLE_TIPS_EN=[{icon:'💧',title:'PET Bottles: Remove, Peel, Rinse',body:'Remove the cap, peel off the label, and lightly rinse the bottle before recycling. Local rules may vary, so check the label or local guidance.'},{icon:'♻️',title:'PET Bottles Are Resources, Not Just Trash',body:'Properly sorted PET bottles can become food trays, fibers, and even new PET bottles through bottle-to-bottle recycling.'},{icon:'📄',title:'Dirty Paper Often Cannot Be Recycled',body:'Pizza boxes, used tissues, strongly scented paper, aluminum-coated paper, and waterproof paper can interfere with paper recycling.'},{icon:'🥫',title:'Aluminum Cans Can Be Recycled Again and Again',body:'Aluminum is easy to reuse without losing much quality, and many collected cans become material for new cans.'},{icon:'🌍',title:'Sorting Helps Reduce Waste',body:'Packaging makes up a large share of household waste. Proper sorting helps reduce incineration and landfill while making better use of resources.'}];
+function tr(k){return(I18N[currentLang]&&I18N[currentLang][k])||I18N.ja[k]||k;}function switchLang(lang){currentLang=lang||(currentLang==='ja'?'en':'ja');localStorage.setItem('reblock-lang',currentLang);applyLang();}function qs(s){return document.querySelector(s);}function txt(s,v){const e=qs(s);if(e)e.innerText=v;}function htmlSet(s,v){const e=qs(s);if(e)e.innerHTML=v;}
+function applyLang(){htmlSet('#demo-bottle + .mud-guide',tr('bottleGuide'));htmlSet('#demo-can + .mud-guide',tr('canGuide'));htmlSet('#demo-paper + .mud-guide',tr('paperGuide'));txt('.title-warning',tr('warning'));const lb=document.getElementById('btn-lang');if(lb)lb.innerText=tr('langBtn');txt('.link-card .link-card-sub',tr('rankCardSub'));const rb=document.getElementById('btn-open-ranking-title');if(rb)rb.innerText=tr('rankCardBtn');txt('#bin-1 .bin-label',tr('bin1'));txt('#bin-2 .bin-label',tr('bin2'));txt('#bin-3 .bin-label',tr('bin3'));const ro=document.getElementById('btn-ranking-open');if(ro)ro.innerText=tr('rankOpen');txt('.tip-badge',tr('tipBadge'));txt('#tip-title',tr('tipTitleDefault'));txt('#tip-body',tr('tipBodyDefault'));txt('.tip-note',tr('tipNote'));txt('#btn-tip-continue',tr('tipContinue'));const ph=document.getElementById('player-name');if(ph)ph.placeholder=tr('namePh');const saveSub=document.querySelector('#gameover-screen .link-card-sub');if(saveSub)saveSub.innerText=tr('goSaveSub');txt('#ranking-screen .ranking-sub',tr('rankSub'));txt('#btn-close-ranking',tr('closeRank'));htmlSet('.ranking-note',tr('rankNote'));if(document.getElementById('ranking-screen').style.display!=='none')renderRanking();}
+function localizedReason(reason){if(currentLang==='ja')return reason||tr('goReasonDefault');if(!reason)return tr('goReasonDefault');if(String(reason).includes('BOX FULL')||String(reason).includes('溢れ'))return tr('overflow');if(String(reason).includes('分別エラー'))return tr('wrongSort')();return reason;}
+
 
 /* ============== SND: 完全合成BGM＋アクセシブルな効果音（Web Audio API、外部音源ファイル不使用） ============== */
 const SND = (function(){
@@ -389,35 +403,18 @@ const SND = (function(){
 
   // === 操作サウンド ===
   function playMove(dir){
-    if(!ctx) return;
-    const t=ctx.currentTime;
-    if(dir<0){
-      tone(t, 880, 'square', 0.06, 0.35, -0.6, 0.003);
-      tone(t+0.06, 587, 'square', 0.08, 0.30, -0.6, 0.003);
-    } else {
-      tone(t, 587, 'square', 0.06, 0.35, 0.6, 0.003);
-      tone(t+0.06, 880, 'square', 0.08, 0.30, 0.6, 0.003);
-    }
+    if(!ctx) return; const t=ctx.currentTime;
+    if(dir<0){ tone(t, 880, 'square', 0.06, 0.35, -0.6, 0.003); tone(t+0.06, 587, 'square', 0.08, 0.30, -0.6, 0.003); }
+    else { tone(t, 587, 'square', 0.06, 0.35, 0.6, 0.003); tone(t+0.06, 880, 'square', 0.08, 0.30, 0.6, 0.003); }
   }
   function playDrop(){
-    if(!ctx) return;
-    const t=ctx.currentTime;
-    const o=ctx.createOscillator(), g=ctx.createGain();
-    o.type='sine';
-    o.frequency.setValueAtTime(250, t);
-    o.frequency.exponentialRampToValueAtTime(60, t+0.15);
-    g.gain.setValueAtTime(0.45, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t+0.2);
-    o.connect(g); g.connect(sfxGain);
-    o.start(t); o.stop(t+0.25);
-    noiseBurst(t, 1500, 0.04, 0.2, 0);
+    if(!ctx) return; const t=ctx.currentTime; const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(250, t); o.frequency.exponentialRampToValueAtTime(60, t+0.15);
+    g.gain.setValueAtTime(0.45, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.2);
+    o.connect(g); g.connect(sfxGain); o.start(t); o.stop(t+0.25); noiseBurst(t, 1500, 0.04, 0.2, 0);
   }
   function playRotate(){
-    if(!ctx) return;
-    const t=ctx.currentTime;
-    sweep(t, 400, 1200, 'triangle', 0.15, 0.35, 0);
-    bell(t+0.05, 1100, sfxGain);
-    tone(t+0.1, 1320, 'sine', 0.08, 0.20, 0, 0.003);
+    if(!ctx) return; const t=ctx.currentTime; sweep(t, 400, 1200, 'triangle', 0.15, 0.35, 0); bell(t+0.05, 1100, sfxGain); tone(t+0.1, 1320, 'sine', 0.08, 0.20, 0, 0.003);
   }
   function playLock(){ if(!ctx) return; tone(ctx.currentTime, 140, 'triangle', 0.06, 0.15, 0, 0.002); }
   function playResourceId(typeId, delay){
@@ -450,14 +447,8 @@ const SND = (function(){
       const f = base * (1 + i*0.15);
       tone(t+i*0.055, f, 'square', 0.1, Math.min(0.14+i*0.015, 0.26), (i%2===0)?-0.3:0.3, 0.003);
     }
-    if(combo>=3){
-      for(let j=0;j<Math.min(combo-1,5);j++){
-        bell(t+0.1+j*0.08, base*(1.5+j*0.25), sfxGain);
-      }
-    }
-    if(combo>=4){
-      sweep(t+0.05, base*0.5, base*3, 'sawtooth', 0.3, 0.12, 0);
-    }
+    if(combo>=3){ for(let j=0;j<Math.min(combo-1,5);j++) bell(t+0.1+j*0.08, base*(1.5+j*0.25), sfxGain); }
+    if(combo>=4) sweep(t+0.05, base*0.5, base*3, 'sawtooth', 0.3, 0.12, 0);
   }
   function playLevelUp(){
     if(!ctx) return; const t=ctx.currentTime; const notes=[523.25,659.25,783.99,1046.5];
@@ -519,64 +510,21 @@ async function submitScore(name, score, level){
     return !error;
   } catch(e){ console.error(e); return false; }
 }
-async function renderRanking(){
-  const el = document.getElementById('ranking-list');
-  el.innerHTML = '<li class="ranking-item"><div class="ranking-name">読み込み中…</div></li>';
-  const items = await fetchRanking(RANKING_LIMIT);
-  if(items===null){ el.innerHTML = '<li class="ranking-item"><div class="ranking-name">' + (supabaseReady ? '読み込みに失敗しました。通信状況をご確認ください。' : 'オフラインモード：ランキングサーバーに接続中です…しばらくお待ちください。') + '</div></li>'; return; }
-  if(!items.length){ el.innerHTML = '<li class="ranking-item"><div class="ranking-name">まだランキングがありません</div></li>'; return; }
-  el.innerHTML = items.map((item,index)=>{
-    const rank=index+1; const prize=TOP3_PRIZES[rank]?`<div class="ranking-prize">TOP${rank} 景品：${TOP3_PRIZES[rank]}</div>`:'';
-    const levelMeta=(item.level!==undefined&&item.level!==null)?` / Lv.${escapeHTML(item.level)}`:''; return `<li class="ranking-item rank-${rank}"><div class="ranking-rank">${rank}</div><div><div class="ranking-name">${escapeHTML(item.name)}</div><div class="ranking-meta">${escapeHTML(formatRankDate(item.created_at))}${levelMeta}</div>${prize}</div><div class="ranking-score">${item.score.toLocaleString()}<div class="ranking-meta">pt</div></div></li>`;
-  }).join('');
-}
+async function renderRanking(){const el=document.getElementById('ranking-list');el.innerHTML=`<li class="ranking-item"><div class="ranking-name">${tr('loading')}</div></li>`;const items=await fetchRanking(RANKING_LIMIT);if(items===null){el.innerHTML=`<li class="ranking-item"><div class="ranking-name">${supabaseReady?tr('loadFail'):tr('offline')}</div></li>`;return;}if(!items.length){el.innerHTML=`<li class="ranking-item"><div class="ranking-name">${tr('noRanking')}</div></li>`;return;}el.innerHTML=items.map((item,index)=>{const rank=index+1;const enPrize={1:'Recycled Material Tote Bag',2:'Recycled PET Pouch',3:'Recycled Paper Notebook'};const prize=TOP3_PRIZES[rank]?`<div class="ranking-prize">TOP${rank} ${tr('prizeLabel')}：${currentLang==='en'?enPrize[rank]:TOP3_PRIZES[rank]}</div>`:'';const levelMeta=(item.level!==undefined&&item.level!==null)?` / Lv.${escapeHTML(item.level)}`:'';return `<li class="ranking-item rank-${rank}"><div class="ranking-rank">${rank}</div><div><div class="ranking-name">${escapeHTML(item.name)}</div><div class="ranking-meta">${escapeHTML(formatRankDate(item.created_at))}${levelMeta}</div>${prize}</div><div class="ranking-score">${item.score.toLocaleString()}<div class="ranking-meta">pt</div></div></li>`;}).join('');}
 function openRanking(){ const el=document.getElementById('ranking-screen'); el.style.display='flex'; el.scrollTop=0; const list=document.getElementById('ranking-list'); if(list) list.scrollTop=0; renderRanking(); }
 function closeRanking(){ document.getElementById('ranking-screen').style.display='none'; }
 let isSavingScore=false;
-async function saveCurrentScore(){
-  if(latestScoreSaved){ document.getElementById('save-status').innerText='このスコアは保存済みです。'; return; }
-  if(isSavingScore) return;
-  isSavingScore=true; const btn=document.getElementById('btn-save-score'); if(btn) btn.disabled=true;
-  document.getElementById('save-status').innerText='保存中…';
-  const name=(document.getElementById('player-name').value||'ANON').trim().slice(0,12)||'ANON';
-  const ok = await submitScore(name, pendingFinalScore, pendingFinalLevel);
-  isSavingScore=false; if(btn) btn.disabled=false;
-  if(ok){ latestScoreSaved=true; document.getElementById('save-status').innerText='スコアを全国ランキングに保存しました。ランキングで確認できます。'; }
-  else { document.getElementById('save-status').innerText = supabaseReady ? '保存に失敗しました。通信状況をご確認のうえ、もう一度お試しください。' : 'ランキングサーバーに接続できていません。時間をおいて再度お試しください。'; }
-}
-async function updateSavePrompt(){
-  document.getElementById('player-name').value='';
-  document.getElementById('save-status').innerText='判定中…';
-  const items = await fetchRanking(RANKING_LIMIT);
-  if(items===null){ document.getElementById('save-status').innerText = supabaseReady ? `ランキングに接続できませんでした。通信状況をご確認のうえ、保存をお試しください（到達 Lv.${pendingFinalLevel}）。` : `オフラインモード：ランキングサーバーに接続中です。保存ボタンで再試行できます（到達 Lv.${pendingFinalLevel}）。`; return; }
-  let qualifies = true;
-  if(items.length>=RANKING_LIMIT){ const last=items[items.length-1]; qualifies = (pendingFinalScore>last.score) || (pendingFinalScore===last.score && pendingFinalLevel>last.level); }
-  document.getElementById('save-status').innerText = qualifies ? `ランキング入りのチャンス！到達 Lv.${pendingFinalLevel} で保存できます。` : `保存すると全国ランキングに反映されます（到達 Lv.${pendingFinalLevel}）。`;
-}
+async function saveCurrentScore(){if(latestScoreSaved){document.getElementById('save-status').innerText=tr('saveAlready');return;}if(isSavingScore)return;isSavingScore=true;const btn=document.getElementById('btn-save-score');if(btn)btn.disabled=true;document.getElementById('save-status').innerText=tr('saving');const name=(document.getElementById('player-name').value||'ANON').trim().slice(0,12)||'ANON';const ok=await submitScore(name,pendingFinalScore,pendingFinalLevel);isSavingScore=false;if(btn)btn.disabled=false;if(ok){latestScoreSaved=true;document.getElementById('save-status').innerText=tr('saveOk');}else{document.getElementById('save-status').innerText=supabaseReady?tr('saveFail'):tr('saveFailOffline');}}
+async function updateSavePrompt(){document.getElementById('player-name').value='';document.getElementById('save-status').innerText=tr('checking');const items=await fetchRanking(RANKING_LIMIT);if(items===null){document.getElementById('save-status').innerText=supabaseReady?tr('promptFail')(pendingFinalLevel):tr('promptOffline')(pendingFinalLevel);return;}let qualifies=true;if(items.length>=RANKING_LIMIT){const last=items[items.length-1];qualifies=(pendingFinalScore>last.score)||(pendingFinalScore===last.score&&pendingFinalLevel>last.level);}document.getElementById('save-status').innerText=qualifies?tr('promptChance')(pendingFinalLevel):tr('promptSave')(pendingFinalLevel);}
 
-
-function getNextTip(){
-  if(!RECYCLE_TIPS.length) return { icon:'♻️', title:'Recycle Tip', body:'正しく分別すると資源はもう一度使えます。' };
-  if(RECYCLE_TIPS.length===1) return RECYCLE_TIPS[0];
-  let idx = Math.floor(Math.random()*RECYCLE_TIPS.length);
-  if(idx===lastTipIndex) idx = (idx + 1) % RECYCLE_TIPS.length;
-  lastTipIndex = idx;
-  return RECYCLE_TIPS[idx];
-}
-function showRecycleTip(reason){
-  pendingGameOverReason = reason;
-  const tip = getNextTip();
-  document.getElementById('tip-icon').innerText = tip.icon || '♻️';
-  document.getElementById('tip-title').innerText = tip.title || 'RECYCLE TIP';
-  document.getElementById('tip-body').innerText = tip.body || '';
-  document.getElementById('tip-screen').style.display='flex';
-}
+function getNextTip(){const tips=currentLang==='en'?RECYCLE_TIPS_EN:RECYCLE_TIPS;if(!tips.length)return{icon:'♻️',title:tr('tipBadge'),body:''};if(tips.length===1)return tips[0];let idx=Math.floor(Math.random()*tips.length);if(idx===lastTipIndex)idx=(idx+1)%tips.length;lastTipIndex=idx;return tips[idx];}
+function showRecycleTip(reason){pendingGameOverReason=reason;const tip=getNextTip();txt('.tip-badge',tr('tipBadge'));document.getElementById('tip-icon').innerText=tip.icon||'♻️';document.getElementById('tip-title').innerText=tip.title||tr('tipBadge');document.getElementById('tip-body').innerText=tip.body||'';txt('.tip-note',tr('tipNote'));txt('#btn-tip-continue',tr('tipContinue'));document.getElementById('tip-screen').style.display='flex';}
 function continueToGameOver(){
   if(document.getElementById('tip-screen').style.display==='none') return;
   document.getElementById('tip-screen').style.display='none';
   document.getElementById('gameover-screen').style.display='flex';
   document.getElementById('go-score').innerText=score;
-  document.getElementById('go-reason').innerText=pendingGameOverReason || '分別エラー！';
+  document.getElementById('go-reason').innerText=localizedReason(pendingGameOverReason);
   pendingFinalScore=score;
   pendingFinalLevel=level;
   updateSavePrompt();
@@ -637,7 +585,7 @@ function init(){
   document.addEventListener('pointerup', pointerUp);
   canvas.addEventListener('touchstart', e=>e.preventDefault(), {passive:false});
   window.addEventListener('resize', ()=>{ handleResize(); applyMobileSizing(); });
-  handleResize(); renderRanking(); applyMobileSizing();
+  handleResize(); renderRanking(); applyMobileSizing(); applyLang();
 }
 function startGame(){
   SND.unlock();
@@ -706,6 +654,7 @@ function spawnEcoParticles(x,y,typeId){ const color=RESOURCES[typeId].lineColor;
 function update(dt){ for(let i=particles.length-1;i>=0;i--){ particles[i].update(); if(particles[i].life<=0) particles.splice(i,1); } if(gameState===STATE.PLAYING){ elapsedPlayTime += dt; updateLevelByTime(); const gravityOccurred=applyGravity(); if(!gravityOccurred) updateMatches(); if(current.active){ dropCounter+=dt; if(dropCounter>dropInterval){ movePiece(0,1,false); dropCounter=0; } } else if(!gravityOccurred){ spawnPiece(); } } }
 function render(){ ctx.clearRect(0,0,canvas.width,canvas.height); drawGrid(); for(let r=0;r<ROWS;r++){ for(let c=0;c<COLS;c++){ if(board[r][c].type!==0){ const isMatched=board[r][c].matchedId!==null; const isDragged=isDragging&&swipeTargetMatchId===board[r][c].matchedId; drawEcoBlock(ctx,c*CELL_SIZE,r*CELL_SIZE,CELL_SIZE,board[r][c].type,isMatched,isDragged); } } } if(gameState===STATE.PLAYING&&current.active){ if(current.y>=0) drawEcoBlock(ctx,current.x*CELL_SIZE,current.y*CELL_SIZE,CELL_SIZE,current.blocks[0].type); const sub=getSubBlockPos(current.x,current.y,current.rotation); if(sub.y>=0) drawEcoBlock(ctx,sub.x*CELL_SIZE,sub.y*CELL_SIZE,CELL_SIZE,current.blocks[1].type); } particles.forEach(p=>p.draw(ctx)); }
 function gameLoop(time){ if(gameState===STATE.GAMEOVER) return; const dt=time-lastTime; lastTime=time; update(dt); render(); requestAnimationFrame(gameLoop); }
+applyLang();
 init();
 </script>
 </body>
