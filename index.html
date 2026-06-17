@@ -240,7 +240,7 @@ const TOP3_PRIZES = {1:'再生素材トートバッグ',2:'再生PETポーチ',3
 // ゲーム本体は Supabase の読み込みに一切依存せず即座に起動する。
 const SUPABASE_URL = 'https://mkwqprygjurqcejqvier.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_lKHBE8teP-pQ1RGK02WCBA_tsXABAX_';
-let supabase = null;
+let sbClient = null;
 let supabaseReady = false;
 (function loadSupabaseAsync(){
   const s = document.createElement('script');
@@ -249,12 +249,12 @@ let supabaseReady = false;
   s.onload = function(){
     try {
       if(window.supabase && typeof window.supabase.createClient==='function'){
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
         supabaseReady = true;
         console.log('Supabase: 接続成功。全国ランキング機能が有効です。');
         if(document.getElementById('ranking-screen').style.display !== 'none'){ renderRanking(); }
       } else { console.warn('Supabase: createClient が見つかりません。'); }
-    } catch(e){ console.warn('Supabase 初期化エラー:', e); supabase = null; }
+    } catch(e){ console.warn('Supabase 初期化エラー:', e); sbClient = null; }
   };
   s.onerror = function(){ console.warn('Supabase: CDN読み込み失敗。ゲームはオフラインモードで動作します。'); };
   document.head.appendChild(s);
@@ -387,8 +387,7 @@ const SND = (function(){
   }
   function toggleMute(){ setMuted(!muted); }
 
-  // === 操作サウンド（はっきり聞こえる個性的な音） ===
-  // ← 左: 下降2音「ピッポ」パン左
+  // === 操作サウンド ===
   function playMove(dir){
     if(!ctx) return;
     const t=ctx.currentTime;
@@ -396,12 +395,10 @@ const SND = (function(){
       tone(t, 880, 'square', 0.06, 0.35, -0.6, 0.003);
       tone(t+0.06, 587, 'square', 0.08, 0.30, -0.6, 0.003);
     } else {
-      // → 右: 上昇2音「ポピッ」パン右
       tone(t, 587, 'square', 0.06, 0.35, 0.6, 0.003);
       tone(t+0.06, 880, 'square', 0.08, 0.30, 0.6, 0.003);
     }
   }
-  // ↓ 下: 重い「ドスン」低音パンチ
   function playDrop(){
     if(!ctx) return;
     const t=ctx.currentTime;
@@ -415,7 +412,6 @@ const SND = (function(){
     o.start(t); o.stop(t+0.25);
     noiseBurst(t, 1500, 0.04, 0.2, 0);
   }
-  // ↻ 回転: キラッとスピン「キュルン」
   function playRotate(){
     if(!ctx) return;
     const t=ctx.currentTime;
@@ -430,7 +426,6 @@ const SND = (function(){
     else if(typeId===2){ tone(t, 1000,'square',0.05,0.16,0); tone(t+0.04, 1500,'square',0.06,0.1,0); }
     else noiseBurst(t, 2800, 0.1, 0.18, 0);
   }
-  // === プヨプヨ風連鎖エスカレーション + 爬快消去音 ===
   const CHAIN_SCALE = [261.63,329.63,392.00,523.25,659.25,783.99,1046.50,1318.51];
   function playSortSuccess(typeId, combo){
     if(!ctx) return;
@@ -445,7 +440,6 @@ const SND = (function(){
     else if(typeId===2){ tone(t+0.05, base*1.25,'square',0.06, vol*0.4, 0); tone(t+0.09, base*1.875,'square',0.08, vol*0.35, 0); }
     else noiseBurst(t+0.04, 2000+ci*400, 0.1, vol*0.45, 0);
   }
-  // === プヨプヨ風連鎖ファンファーレ ===
   function playCombo(combo){
     if(!ctx||!combo||combo<2) return;
     const t=ctx.currentTime;
@@ -506,9 +500,9 @@ function formatRankDate(iso){
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 async function fetchRanking(limit=RANKING_LIMIT){
-  if(!supabase) return null;
+  if(!sbClient) return null;
   try{
-    const { data, error } = await supabase.from('rankings')
+    const { data, error } = await sbClient.from('rankings')
       .select('name, score, level, created_at')
       .order('score', { ascending:false })
       .order('level', { ascending:false })
@@ -519,9 +513,9 @@ async function fetchRanking(limit=RANKING_LIMIT){
   } catch(e){ console.error(e); return null; }
 }
 async function submitScore(name, score, level){
-  if(!supabase) return false;
+  if(!sbClient) return false;
   try{
-    const { error } = await supabase.from('rankings').insert({ name, score, level });
+    const { error } = await sbClient.from('rankings').insert({ name, score, level });
     return !error;
   } catch(e){ console.error(e); return false; }
 }
