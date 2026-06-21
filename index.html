@@ -10,7 +10,7 @@
   --bg-top:#FFFDF2; --bg-bottom:#FFF3B0; --panel-bg:rgba(255,255,255,.86); --panel-border:rgba(255,255,255,.96);
   --text-main:#5D4037; --text-accent:#2E7D32; --shadow-soft:0 8px 28px rgba(93,64,55,.10);
   --btn-color:#4caf50; --btn-hover:#43a047; --color-bottle:#0288d1; --color-can:#e65100; --color-paper:#33691e;
-  --rank-purple:#8E24AA; --danger:#d32f2f;
+  --rank-purple:#8E24AA; --danger:#d32f2f; --app-h:100vh;
 }
 *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
@@ -43,7 +43,7 @@ button{font-family:inherit}
 .audio-toggle{position:fixed;top:calc(10px + env(safe-area-inset-top));right:calc(10px + env(safe-area-inset-right));width:46px;height:46px;border-radius:50%;border:none;background:rgba(255,255,255,.92);box-shadow:0 4px 10px rgba(93,64,55,.18);font-size:1.3rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:500;line-height:1}
 .audio-toggle:active{transform:scale(.94)}
 
-#game-screen{display:none;height:100vh;width:100vw;padding:10px;gap:16px;align-items:stretch;justify-content:center}
+#game-screen{display:none;height:var(--app-h,100vh);width:100vw;padding:10px;gap:16px;align-items:stretch;justify-content:center}
 #hud-left,#hud-right{display:flex;flex-direction:column;gap:12px}
 #hud-left{width:220px} #hud-right{width:240px}
 .box{padding:14px;text-align:center}
@@ -130,23 +130,36 @@ button{font-family:inherit}
   .title-icon-item{min-width:0;flex:1}
   .title-icon-item canvas{width:56px;height:56px}
   .mud-guide{font-size:.72rem}
-  #game-screen{display:none;grid-template-areas:'hud' 'board' 'actions';grid-template-columns:1fr;grid-template-rows:auto 1fr auto;align-items:start;justify-items:center;padding:6px 8px calc(12px + env(safe-area-inset-bottom));gap:8px;height:100vh;overflow:hidden}
-  #hud-left{grid-area:hud;flex-direction:row;flex:none;width:100%;max-width:500px;gap:8px}
-  #hud-left .box{flex:1;min-height:72px;padding:8px}
-  #game-container{grid-area:board;padding:8px;align-self:center}
-  #hud-right{grid-area:actions;width:100%;max-width:500px}
+  #game-screen{display:none;grid-template-areas:'hud' 'board' 'actions';grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr) auto;align-items:stretch;justify-items:center;padding:6px 8px calc(8px + env(safe-area-inset-bottom));gap:clamp(4px,1.1vh,8px);height:var(--app-h,100dvh);overflow:hidden}
+  #hud-left{grid-area:hud;flex-direction:row;flex:none;width:100%;max-width:500px;gap:clamp(5px,1.2vw,8px)}
+  #hud-left .box{flex:1;min-height:clamp(56px,10vh,72px);padding:clamp(5px,1vh,8px)}
+  #hud-left .hud-label{font-size:clamp(.72rem,3vw,1rem);margin-bottom:2px}
+  #hud-left .hud-value{font-size:clamp(1.35rem,7vw,2.05rem)}
+  #game-container{grid-area:board;padding:clamp(4px,1vh,8px);align-self:center;max-height:100%;min-height:0}
+  #hud-right{grid-area:actions;width:100%;max-width:500px;align-self:end}
   #desktop-next-box{display:none !important}
-  #mobile-next-box{display:flex !important}
-  #mobile-next-box canvas{width:110px;height:60px}
-  #action-box{padding:8px 8px 10px;background:rgba(255,253,242,.88)}
-  .controls{gap:8px;margin-bottom:8px;order:1}
-  .ctrl-btn{min-height:48px;padding:10px 0;font-size:1.25rem}
-  #recycle-bins-container{flex-direction:row;gap:6px;width:100%;height:84px;order:2}
-  .bin-slot{min-height:84px}
-  .bin-icon{font-size:2.15rem}
-  .bin-label{font-size:.72rem}
+  #mobile-next-box{display:flex !important;align-items:center;justify-content:center}
+  #mobile-next-box canvas{width:clamp(86px,28vw,110px);height:clamp(42px,7vh,60px)}
+  #action-box{padding:clamp(5px,1vh,8px);gap:clamp(5px,1vh,8px);background:rgba(255,253,242,.88);flex:none}
+  #btn-ranking-open{display:none !important}
+  .controls{gap:clamp(6px,1.4vw,8px);margin-bottom:0;order:2}
+  .ctrl-btn{min-height:clamp(38px,7vh,48px);padding:clamp(6px,1vh,10px) 0;font-size:clamp(1.05rem,5vw,1.25rem)}
+  #recycle-bins-container{flex-direction:row;gap:clamp(5px,1.2vw,6px);width:100%;height:clamp(58px,10vh,84px);order:1;flex:none}
+  .bin-slot{min-height:auto;height:100%}
+  .bin-icon{font-size:clamp(1.45rem,6vw,2.15rem)}
+  .bin-label{font-size:clamp(.58rem,2.4vw,.72rem);margin-top:2px}
   .link-card{width:min(380px,94vw)}
   .go-save-row,#go-buttons,.ranking-actions{flex-direction:column}
+}
+@media (max-width:850px) and (max-height:700px){
+  #game-screen{padding-top:4px;gap:4px}
+  #hud-left .box{min-height:52px;padding:5px}
+  #mobile-next-box canvas{width:86px;height:42px}
+  #action-box{padding:5px;gap:5px}
+  .ctrl-btn{min-height:38px;padding:5px 0}
+  #recycle-bins-container{height:58px}
+  .bin-icon{font-size:1.45rem}
+  .bin-label{font-size:.58rem}
 }
 @media (max-width:420px){
   .game-title{font-size:2.45rem}
@@ -169,6 +182,39 @@ button{font-family:inherit}
 .howto-mini{font-size:.86rem;color:#8d6e63;line-height:1.55;margin-top:10px;text-align:center;font-weight:700}
 .howto-link{margin-top:10px;background:transparent;border:none;color:#8E24AA;font-weight:900;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .howto-actions{display:flex;justify-content:center;margin-top:14px}
+
+/* === v4: ゴミ箱を参考画像のような形状に変更 ======================= */
+.bin-slot{position:relative;overflow:visible;border-style:none !important;background:rgba(255,255,255,.40);padding:8px 6px;gap:4px}
+.bin-slot.drag-over{transform:scale(1.05);background:rgba(255,255,255,.96);filter:brightness(1.08);box-shadow:0 0 0 3px rgba(255,255,255,.95),0 0 26px var(--bin-glow)}
+.bin-icon{display:none}
+#bin-1{--bin-main:#0288d1;--bin-light:#29b6f6;--bin-dark:#01579b;--bin-glow:rgba(2,136,209,.42)}
+#bin-2{--bin-main:#e65100;--bin-light:#ff9800;--bin-dark:#bf360c;--bin-glow:rgba(230,81,0,.42)}
+#bin-3{--bin-main:#33691e;--bin-light:#8bc34a;--bin-dark:#1b5e20;--bin-glow:rgba(51,105,30,.42)}
+.trash-bin-shape{position:relative;width:min(132px,92%);height:108px;margin:0 auto;pointer-events:none;filter:drop-shadow(0 7px 9px rgba(0,0,0,.14)) drop-shadow(0 0 11px var(--bin-glow));background:linear-gradient(180deg,var(--bin-light) 0%,var(--bin-main) 45%,var(--bin-dark) 100%);clip-path:polygon(13% 36%,87% 36%,78% 100%,22% 100%);border-radius:12px 12px 18px 18px;box-shadow:inset 0 10px 16px rgba(255,255,255,.20),inset 0 -18px 20px rgba(0,0,0,.13)}
+.trash-bin-shape::before{content:"";position:absolute;left:13%;right:13%;top:0;height:30px;background:linear-gradient(180deg,var(--bin-light),var(--bin-main));border:4px solid var(--bin-light);border-bottom-color:var(--bin-dark);border-radius:12px 12px 4px 4px;clip-path:polygon(14% 0,86% 0,100% 100%,0 100%);box-shadow:inset 0 4px 8px rgba(255,255,255,.28),inset 0 -5px 8px rgba(0,0,0,.12)}
+.trash-bin-shape::after{content:"";position:absolute;left:2%;right:2%;top:28px;height:15px;background:linear-gradient(180deg,var(--bin-light),var(--bin-main));border-radius:4px;box-shadow:0 3px 0 var(--bin-dark),inset 0 4px 7px rgba(255,255,255,.28)}
+.trash-slot{position:absolute;left:24%;right:24%;top:11px;height:14px;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(255,255,255,.14));border-radius:2px;clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);box-shadow:inset 0 2px 3px rgba(0,0,0,.28);z-index:2}
+.trash-bin-shape .bin-resource-canvas{position:absolute;left:50%;top:39px;width:42px;height:42px;transform:translateX(-50%);z-index:3;filter:drop-shadow(0 2px 3px rgba(0,0,0,.18))}
+.recycle-mark{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);font-size:2rem;line-height:1;color:rgba(255,255,255,.92);text-shadow:0 2px 5px rgba(0,0,0,.18);font-weight:900;z-index:2}
+.bin-label{font-size:.82rem;line-height:1.1;text-shadow:0 1px 0 rgba(255,255,255,.9)}
+@media (max-width:850px){.trash-bin-shape{width:clamp(70px,28vw,108px);height:clamp(52px,10vh,78px)}.trash-bin-shape::before{height:clamp(16px,3.3vh,24px);border-width:3px}.trash-bin-shape::after{top:clamp(15px,3.2vh,23px);height:clamp(8px,1.8vh,12px)}.trash-slot{top:clamp(6px,1.5vh,9px);height:clamp(7px,1.6vh,11px)}.trash-bin-shape .bin-resource-canvas{top:clamp(23px,4.6vh,33px);width:clamp(26px,8vw,36px);height:clamp(26px,8vw,36px)}.recycle-mark{bottom:clamp(4px,1vh,7px);font-size:clamp(1.05rem,5vw,1.55rem)}.bin-slot{padding:4px 3px;gap:2px}.bin-label{font-size:clamp(.54rem,2.3vw,.68rem)}}
+
+
+/* === v5: リサイクルマークを外し、資源アイコンを大きく表示 =========== */
+.recycle-mark{display:none !important}
+.trash-bin-shape .bin-resource-canvas{top:34px !important;width:64px !important;height:64px !important;filter:drop-shadow(0 3px 4px rgba(0,0,0,.22)) drop-shadow(0 0 8px rgba(255,255,255,.45)) !important}
+.trash-bin-shape{height:112px}
+.bin-label{margin-top:5px;font-size:.86rem;font-weight:900}
+@media (max-width:850px){
+  .trash-bin-shape{width:clamp(76px,29vw,112px);height:clamp(56px,10.5vh,82px)}
+  .trash-bin-shape .bin-resource-canvas{top:clamp(18px,3.8vh,28px) !important;width:clamp(42px,12vw,56px) !important;height:clamp(42px,12vw,56px) !important}
+  .bin-label{font-size:clamp(.56rem,2.4vw,.70rem);margin-top:2px}
+}
+@media (max-width:850px) and (max-height:700px){
+  .trash-bin-shape{height:clamp(52px,10vh,72px)}
+  .trash-bin-shape .bin-resource-canvas{top:clamp(17px,3.6vh,24px) !important;width:clamp(38px,11vw,50px) !important;height:clamp(38px,11vw,50px) !important}
+}
+
 </style>
 </head>
 <body>
@@ -213,9 +259,9 @@ button{font-family:inherit}
   <div id="hud-right">
     <div id="action-box" class="glass">
       <div id="recycle-bins-container">
-        <div class="bin-slot" id="bin-1" data-type="1"><div class="bin-icon">💧</div><div class="bin-label">PETボトル</div></div>
-        <div class="bin-slot" id="bin-2" data-type="2"><div class="bin-icon">🥫</div><div class="bin-label">アルミ缶</div></div>
-        <div class="bin-slot" id="bin-3" data-type="3"><div class="bin-icon">📄</div><div class="bin-label">古紙</div></div>
+        <div class="bin-slot" id="bin-1" data-type="1"><div class="trash-bin-shape"><div class="trash-slot"></div><canvas class="bin-resource-canvas" data-type="1" width="96" height="96"></canvas></div><div class="bin-label">PETボトル</div></div>
+        <div class="bin-slot" id="bin-2" data-type="2"><div class="trash-bin-shape"><div class="trash-slot"></div><canvas class="bin-resource-canvas" data-type="2" width="96" height="96"></canvas></div><div class="bin-label">アルミ缶</div></div>
+        <div class="bin-slot" id="bin-3" data-type="3"><div class="trash-bin-shape"><div class="trash-slot"></div><canvas class="bin-resource-canvas" data-type="3" width="96" height="96"></canvas></div><div class="bin-label">古紙</div></div>
       </div>
       <div class="controls">
         <button id="btn-left" class="ctrl-btn">◀</button>
@@ -310,7 +356,7 @@ ja:{langBtn:'🌐 English',bottleGuide:'PETボトル<br>→ 👕 フリース',c
 en:{langBtn:'🌐 日本語',bottleGuide:'PET Bottle<br>→ 👕 Fleece',canGuide:'Aluminum Can<br>→ 🚲 Bicycle',paperGuide:'Waste Paper<br>→ 📓 Notebook',warning:'⚠️ Wrong sorting = instant game over!',rankCardSub:'Top 3 win upcycled prizes. Aim for the top!',rankCardBtn:'View Ranking',bin1:'PET Bottle',bin2:'Aluminum Can',bin3:'Waste Paper',rankOpen:'SCORE RANKING',tipBadge:'RECYCLE TIP',tipTitleDefault:'Sorted resources can be used again!',tipBodyDefault:'Recycling trivia will appear here.',tipNote:'Rules may vary by municipality or collection point. After this screen, the game over screen will appear.',tipContinue:'View Game Over',goReasonDefault:'Sorting error!',goSaveSub:'After saving, check your score on the ranking screen.',namePh:'Enter name (e.g. YOSUKE)',rankSub:'Re:Block score ranking. Top 3 are planned to receive upcycled prizes.',closeRank:'Back to Game',rankNote:'🥇 1st: Recycled Material Tote Bag<br>🥈 2nd: Recycled PET Pouch<br>🥉 3rd: Recycled Paper Notebook',loading:'Loading…',loadFail:'Failed to load. Please check your connection.',offline:'Offline mode: Connecting to the ranking server… please wait.',noRanking:'No ranking entries yet',prizeLabel:'Prize',saveAlready:'This score has already been saved.',saving:'Saving…',saveOk:'Score saved to the national ranking. Check it on the ranking screen.',saveFail:'Failed to save. Please check your connection and try again.',saveFailOffline:'Ranking server is not connected. Please try again later.',checking:'Checking…',promptOffline:(lv)=>`Offline mode: Connecting to the ranking server. You can retry with SAVE SCORE (Reached Lv.${lv}).`,promptFail:(lv)=>`Could not connect to the ranking server. Please check your connection and try saving again (Reached Lv.${lv}).`,promptChance:(lv)=>`Ranking chance! You can save your score at Lv.${lv}.`,promptSave:(lv)=>`Save to submit this score to the national ranking (Reached Lv.${lv}).`,overflow:'Blocks overflowed!\n(BOX FULL)',wrongSort:()=> 'Sorting error!\nYou put it in the wrong bin!'}};
 const RECYCLE_TIPS_EN=[{icon:'💧',title:'PET Bottles: Remove, Peel, Rinse',body:'Remove the cap, peel off the label, and lightly rinse the bottle before recycling. Local rules may vary, so check the label or local guidance.'},{icon:'♻️',title:'PET Bottles Are Resources, Not Just Trash',body:'Properly sorted PET bottles can become food trays, fibers, and even new PET bottles through bottle-to-bottle recycling.'},{icon:'📄',title:'Dirty Paper Often Cannot Be Recycled',body:'Pizza boxes, used tissues, strongly scented paper, aluminum-coated paper, and waterproof paper can interfere with paper recycling.'},{icon:'🥫',title:'Aluminum Cans Can Be Recycled Again and Again',body:'Aluminum is easy to reuse without losing much quality, and many collected cans become material for new cans.'},{icon:'🌍',title:'Sorting Helps Reduce Waste',body:'Packaging makes up a large share of household waste. Proper sorting helps reduce incineration and landfill while making better use of resources.'}];
 function tr(k){return(I18N[currentLang]&&I18N[currentLang][k])||I18N.ja[k]||k;}function switchLang(lang){currentLang=lang||(currentLang==='ja'?'en':'ja');localStorage.setItem('reblock-lang',currentLang);applyLang();}function qs(s){return document.querySelector(s);}function txt(s,v){const e=qs(s);if(e)e.innerText=v;}function htmlSet(s,v){const e=qs(s);if(e)e.innerHTML=v;}
-function applyLang(){htmlSet('#demo-bottle + .mud-guide',tr('bottleGuide'));htmlSet('#demo-can + .mud-guide',tr('canGuide'));htmlSet('#demo-paper + .mud-guide',tr('paperGuide'));txt('.title-warning',tr('warning'));const lb=document.getElementById('btn-lang');if(lb)lb.innerText=tr('langBtn');txt('.link-card .link-card-sub',tr('rankCardSub'));const rb=document.getElementById('btn-open-ranking-title');if(rb)rb.innerText=tr('rankCardBtn');txt('#bin-1 .bin-label',tr('bin1'));txt('#bin-2 .bin-label',tr('bin2'));txt('#bin-3 .bin-label',tr('bin3'));const ro=document.getElementById('btn-ranking-open');if(ro)ro.innerText=tr('rankOpen');txt('.tip-badge',tr('tipBadge'));txt('#tip-title',tr('tipTitleDefault'));txt('#tip-body',tr('tipBodyDefault'));txt('.tip-note',tr('tipNote'));txt('#btn-tip-continue',tr('tipContinue'));const ph=document.getElementById('player-name');if(ph)ph.placeholder=tr('namePh');const saveSub=document.querySelector('#gameover-screen .link-card-sub');if(saveSub)saveSub.innerText=tr('goSaveSub');txt('#ranking-screen .ranking-sub',tr('rankSub'));txt('#btn-close-ranking',tr('closeRank'));htmlSet('.ranking-note',tr('rankNote'));if(typeof renderHowTo==='function')renderHowTo();if(document.getElementById('ranking-screen').style.display!=='none')renderRanking();}
+function applyLang(){htmlSet('#demo-bottle + .mud-guide',tr('bottleGuide'));htmlSet('#demo-can + .mud-guide',tr('canGuide'));htmlSet('#demo-paper + .mud-guide',tr('paperGuide'));txt('.title-warning',tr('warning'));const lb=document.getElementById('btn-lang');if(lb)lb.innerText=tr('langBtn');txt('.link-card .link-card-sub',tr('rankCardSub'));const rb=document.getElementById('btn-open-ranking-title');if(rb)rb.innerText=tr('rankCardBtn');txt('#bin-1 .bin-label',tr('bin1'));txt('#bin-2 .bin-label',tr('bin2'));txt('#bin-3 .bin-label',tr('bin3'));const ro=document.getElementById('btn-ranking-open');if(ro)ro.innerText=tr('rankOpen');txt('.tip-badge',tr('tipBadge'));txt('#tip-title',tr('tipTitleDefault'));txt('#tip-body',tr('tipBodyDefault'));txt('.tip-note',tr('tipNote'));txt('#btn-tip-continue',tr('tipContinue'));const ph=document.getElementById('player-name');if(ph)ph.placeholder=tr('namePh');const saveSub=document.querySelector('#gameover-screen .link-card-sub');if(saveSub)saveSub.innerText=tr('goSaveSub');txt('#ranking-screen .ranking-sub',tr('rankSub'));txt('#btn-close-ranking',tr('closeRank'));htmlSet('.ranking-note',tr('rankNote'));if(typeof renderHowTo==='function')renderHowTo();if(typeof drawBinResourceIcons==='function')drawBinResourceIcons();if(document.getElementById('ranking-screen').style.display!=='none')renderRanking();}
 function localizedReason(reason){if(currentLang==='ja')return reason||tr('goReasonDefault');if(!reason)return tr('goReasonDefault');if(String(reason).includes('BOX FULL')||String(reason).includes('溢れ'))return tr('overflow');if(String(reason).includes('分別エラー'))return tr('wrongSort')();return reason;}
 
 
@@ -587,12 +633,21 @@ function updateLevelByTime(){
     SND.playLevelUp();
   }
 }
+function getViewportHeight(){ return (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight; }
+function setAppHeight(){ document.documentElement.style.setProperty('--app-h', getViewportHeight() + 'px'); }
 function applyMobileSizing(){
+  setAppHeight();
   if(window.innerWidth > 850){ canvas.style.width = canvas.width + 'px'; canvas.style.height = canvas.height + 'px'; return; }
+  const gameScreen = document.getElementById('game-screen');
   const topH = document.getElementById('hud-left').offsetHeight;
   const actionH = document.getElementById('action-box').offsetHeight;
-  const available = window.innerHeight - topH - actionH - 28;
-  const h = Math.max(240, Math.min(available, 430));
+  const styles = window.getComputedStyle(gameScreen);
+  const gap = parseFloat(styles.rowGap || styles.gap) || 6;
+  const padY = (parseFloat(styles.paddingTop) || 0) + (parseFloat(styles.paddingBottom) || 0);
+  const viewportH = getViewportHeight();
+  const available = viewportH - topH - actionH - gap * 2 - padY - 4;
+  const maxH = Math.min(430, viewportH * 0.52);
+  const h = Math.max(140, Math.min(available, maxH));
   const w = Math.round(h / 2);
   canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
 }
@@ -600,10 +655,21 @@ function handleResize(){
   if(window.innerWidth <= 850){ document.getElementById('desktop-next-box').style.display='none'; document.getElementById('mobile-next-box').style.display='flex'; }
   else { document.getElementById('desktop-next-box').style.display='flex'; document.getElementById('mobile-next-box').style.display='none'; }
 }
+
+function drawBinResourceIcons(){
+  document.querySelectorAll('.bin-resource-canvas').forEach(el=>{
+    const typeId=parseInt(el.dataset.type,10);
+    const c=el.getContext('2d');
+    if(!c || !RESOURCES[typeId]) return;
+    c.clearRect(0,0,el.width,el.height);
+    drawEcoBlock(c,8,8,80,typeId,false,false);
+  });
+}
+
 function setupTouchBtn(id, action){ const btn=document.getElementById(id); btn.addEventListener('touchstart', e=>{ e.preventDefault(); action(); }); btn.addEventListener('click', action); }
 
 function init(){
-  drawMUDDemo(document.getElementById('demo-bottle'),1); drawMUDDemo(document.getElementById('demo-can'),2); drawMUDDemo(document.getElementById('demo-paper'),3);
+  drawMUDDemo(document.getElementById('demo-bottle'),1); drawMUDDemo(document.getElementById('demo-can'),2); drawMUDDemo(document.getElementById('demo-paper'),3); drawBinResourceIcons();
   document.getElementById('btn-start').addEventListener('click', startGame);
   document.getElementById('btn-howto').addEventListener('click', openHowTo);
   document.getElementById('btn-close-howto').addEventListener('click', closeHowTo);
@@ -625,8 +691,11 @@ function init(){
   document.addEventListener('pointermove', pointerMove, {passive:false});
   document.addEventListener('pointerup', pointerUp);
   canvas.addEventListener('touchstart', e=>e.preventDefault(), {passive:false});
-  window.addEventListener('resize', ()=>{ handleResize(); applyMobileSizing(); });
-  handleResize(); renderRanking(); applyMobileSizing(); applyLang(); renderHowTo();
+  const resizeGameView=()=>{ handleResize(); applyMobileSizing(); };
+  window.addEventListener('resize', resizeGameView);
+  window.addEventListener('orientationchange', resizeGameView);
+  if(window.visualViewport){ window.visualViewport.addEventListener('resize', resizeGameView); window.visualViewport.addEventListener('scroll', resizeGameView); }
+  handleResize(); renderRanking(); setAppHeight(); applyMobileSizing(); applyLang(); renderHowTo();
 }
 function startGame(){
   SND.unlock();
@@ -640,7 +709,7 @@ function startGame(){
   score=0; level=1; dropInterval=LEVEL_SPEEDS[1]; elapsedPlayTime=0; currentCombo=0; if(comboTimer) clearTimeout(comboTimer);
   updateHUD(); latestScoreSaved=false; pendingFinalScore=0; pendingFinalLevel=1; pendingGameOverReason=''; document.getElementById('save-status').innerText='';
   particles=[]; isDragging=false; swipeTargetMatchId=null; swipeTargetTypeId=null; clearBinHighlights();
-  generateNext(); spawnPiece(); applyMobileSizing();
+  generateNext(); spawnPiece(); applyMobileSizing(); requestAnimationFrame(applyMobileSizing); setTimeout(applyMobileSizing, 300);
   gameState=STATE.PLAYING; lastTime=performance.now(); requestAnimationFrame(gameLoop);
 }
 
@@ -712,7 +781,7 @@ function spawnUpcycledItems(startX,startY,typeId,clearedCount){ const res=RESOUR
 function createFlyingParticle(startX,startY,endX,endY,typeId){ const el=document.createElement('div'); el.className='flying-particle'; const res=RESOURCES[typeId]; el.style.backgroundColor=res.baseColor; el.style.border=`2px solid ${res.lineColor}`; el.innerText=res.icon; el.style.fontSize='14px'; el.style.left=(startX-12)+'px'; el.style.top=(startY-12)+'px'; document.body.appendChild(el); requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ el.style.left=(endX-12)+'px'; el.style.top=(endY-12)+'px'; el.style.transform='scale(0.5)'; el.style.opacity='0.2'; }); }); setTimeout(()=>{ if(el.parentNode) el.parentNode.removeChild(el); },400); }
 function drawRoundedRectPath(context, x, y, w, h, r){ const rr=Math.max(0, Math.min(r, Math.min(w, h)/2)); context.moveTo(x+rr,y); context.lineTo(x+w-rr,y); context.quadraticCurveTo(x+w,y,x+w,y+rr); context.lineTo(x+w,y+h-rr); context.quadraticCurveTo(x+w,y+h,x+w-rr,y+h); context.lineTo(x+rr,y+h); context.quadraticCurveTo(x,y+h,x,y+h-rr); context.lineTo(x,y+rr); context.quadraticCurveTo(x,y,x+rr,y); }
 function handleInput(e){ if(document.getElementById('tip-screen').style.display!=='none' && e.key==='Enter'){ continueToGameOver(); return; } if(gameState!==STATE.PLAYING) return; switch(e.key){ case 'ArrowLeft': movePiece(-1,0); break; case 'ArrowRight': movePiece(1,0); break; case 'ArrowDown': movePiece(0,1); break; case 'ArrowUp': case ' ': rotatePiece(); break; } }
-function drawEcoBlock(context,x,y,size,typeId,isMatched=false,isDragged=false){ const res=RESOURCES[typeId]; if(!res) return; context.save(); context.translate(x,y); const cx=size/2, cy=size/2, s=size*.85; let scale=1, alpha=1; if(isMatched){ scale=1+.05*Math.sin(lastTime*.005); if(isDragged){ context.shadowBlur=15; context.shadowColor=res.lineColor; alpha=.6; } else { context.shadowBlur=10; context.shadowColor='rgba(255,255,255,0.8)'; } } else { context.shadowBlur=4; context.shadowColor='rgba(0,0,0,0.1)'; } context.translate(cx,cy); context.scale(scale,scale); context.translate(-cx,-cy); context.globalAlpha=alpha; context.fillStyle=res.baseColor; context.strokeStyle=res.lineColor; context.lineWidth=2.5; context.lineJoin='round'; context.beginPath(); if(res.shape==='bottle'){ const bw=s*.5, bh=s*.8; context.rect(cx-bw*.3, cy-bh/2-2, bw*.6, bh*.15); context.moveTo(cx-bw*.3, cy-bh/2+bh*.15); context.lineTo(cx-bw*.5, cy-bh/4); context.lineTo(cx-bw*.5, cy+bh/2); context.lineTo(cx+bw*.5, cy+bh/2); context.lineTo(cx+bw*.5, cy-bh/4); context.lineTo(cx+bw*.3, cy-bh/2+bh*.15); context.closePath(); } else if(res.shape==='can'){ const cw=s*.6, ch=s*.75; drawRoundedRectPath(context, cx-cw/2, cy-ch/2, cw, ch, 6); } else { const pw=s*.65, ph=s*.75; context.moveTo(cx-pw/2, cy-ph/2); context.lineTo(cx+pw/2-8, cy-ph/2); context.lineTo(cx+pw/2, cy-ph/2+8); context.lineTo(cx+pw/2, cy+ph/2); context.lineTo(cx-pw/2, cy+ph/2); context.closePath(); } context.fill(); context.stroke(); context.beginPath(); context.lineWidth=1.5; if(res.pattern==='wave'){ const bw=s*.4; context.moveTo(cx-bw/2, cy); context.bezierCurveTo(cx-bw/4, cy-4, cx+bw/4, cy+4, cx+bw/2, cy); context.moveTo(cx-bw/2, cy+8); context.bezierCurveTo(cx-bw/4, cy+4, cx+bw/4, cy+12, cx+bw/2, cy+8); } else if(res.pattern==='dots'){ context.moveTo(cx-5, cy-s*.25); context.lineTo(cx+5, cy-s*.25); context.fillStyle=res.lineColor; context.arc(cx-6, cy+4, 1.5, 0, Math.PI*2); context.arc(cx+6, cy+4, 1.5, 0, Math.PI*2); context.arc(cx, cy+10, 1.5, 0, Math.PI*2); context.fill(); } else { const pw=s*.4; context.moveTo(cx-pw/2, cy-5); context.lineTo(cx+pw/2, cy-5); context.moveTo(cx-pw/2, cy+2); context.lineTo(cx+pw/2, cy+2); context.moveTo(cx-pw/2, cy+9); context.lineTo(cx+pw/4, cy+9); const ph=s*.75, px=cx+(s*.65)/2, py=cy-ph/2; context.moveTo(px-8, py); context.lineTo(px-8, py+8); context.lineTo(px, py+8); } context.stroke(); context.fillStyle='rgba(255,255,255,0.4)'; context.beginPath(); if(res.shape==='bottle') context.rect(cx-(s*.5)*.3, cy-s*.2, s*.15, s*.4); else if(res.shape==='can') context.rect(cx-(s*.6)*.3, cy-s*.25, s*.1, s*.5); else context.rect(cx-(s*.65)*.4, cy-s*.3, s*.1, s*.6); context.fill(); context.restore(); }
+function drawEcoBlock(context,x,y,size,typeId,isMatched=false,isDragged=false){ const res=RESOURCES[typeId]; if(!res) return; context.save(); context.translate(x,y); const cx=size/2, cy=size/2, s=size*.85; let scale=1, alpha=1; if(isMatched){ const pulse=(Math.sin(lastTime*.008)+1)/2; scale=1.05+.07*pulse; context.save(); context.globalCompositeOperation='screen'; context.globalAlpha=isDragged ? .42 : .70; context.fillStyle=res.lineColor; context.shadowColor=res.lineColor; context.shadowBlur=22+14*pulse; context.beginPath(); context.arc(cx,cy,size*.45+size*.08*pulse,0,Math.PI*2); context.fill(); context.globalAlpha=isDragged ? .22 : .34; context.shadowBlur=12+10*pulse; context.lineWidth=3+2*pulse; context.strokeStyle=res.lineColor; context.beginPath(); context.arc(cx,cy,size*.54+size*.06*pulse,0,Math.PI*2); context.stroke(); context.globalAlpha=isDragged ? .16 : .28; context.fillStyle=res.baseColor; context.beginPath(); context.arc(cx,cy,size*.34+size*.04*pulse,0,Math.PI*2); context.fill(); context.restore(); if(isDragged){ context.shadowBlur=28; context.shadowColor=res.lineColor; alpha=.72; } else { context.shadowBlur=20+10*pulse; context.shadowColor=res.lineColor; } } else { context.shadowBlur=4; context.shadowColor='rgba(0,0,0,0.1)'; } context.translate(cx,cy); context.scale(scale,scale); context.translate(-cx,-cy); context.globalAlpha=alpha; context.fillStyle=res.baseColor; context.strokeStyle=res.lineColor; context.lineWidth=isMatched?3.2:2.5; context.lineJoin='round'; context.beginPath(); if(res.shape==='bottle'){ const bw=s*.5, bh=s*.8; context.rect(cx-bw*.3, cy-bh/2-2, bw*.6, bh*.15); context.moveTo(cx-bw*.3, cy-bh/2+bh*.15); context.lineTo(cx-bw*.5, cy-bh/4); context.lineTo(cx-bw*.5, cy+bh/2); context.lineTo(cx+bw*.5, cy+bh/2); context.lineTo(cx+bw*.5, cy-bh/4); context.lineTo(cx+bw*.3, cy-bh/2+bh*.15); context.closePath(); } else if(res.shape==='can'){ const cw=s*.6, ch=s*.75; drawRoundedRectPath(context, cx-cw/2, cy-ch/2, cw, ch, 6); } else { const pw=s*.65, ph=s*.75; context.moveTo(cx-pw/2, cy-ph/2); context.lineTo(cx+pw/2-8, cy-ph/2); context.lineTo(cx+pw/2, cy-ph/2+8); context.lineTo(cx+pw/2, cy+ph/2); context.lineTo(cx-pw/2, cy+ph/2); context.closePath(); } context.fill(); context.stroke(); context.beginPath(); context.lineWidth=1.5; if(res.pattern==='wave'){ const bw=s*.4; context.moveTo(cx-bw/2, cy); context.bezierCurveTo(cx-bw/4, cy-4, cx+bw/4, cy+4, cx+bw/2, cy); context.moveTo(cx-bw/2, cy+8); context.bezierCurveTo(cx-bw/4, cy+4, cx+bw/4, cy+12, cx+bw/2, cy+8); } else if(res.pattern==='dots'){ context.moveTo(cx-5, cy-s*.25); context.lineTo(cx+5, cy-s*.25); context.fillStyle=res.lineColor; context.arc(cx-6, cy+4, 1.5, 0, Math.PI*2); context.arc(cx+6, cy+4, 1.5, 0, Math.PI*2); context.arc(cx, cy+10, 1.5, 0, Math.PI*2); context.fill(); } else { const pw=s*.4; context.moveTo(cx-pw/2, cy-5); context.lineTo(cx+pw/2, cy-5); context.moveTo(cx-pw/2, cy+2); context.lineTo(cx+pw/2, cy+2); context.moveTo(cx-pw/2, cy+9); context.lineTo(cx+pw/4, cy+9); const ph=s*.75, px=cx+(s*.65)/2, py=cy-ph/2; context.moveTo(px-8, py); context.lineTo(px-8, py+8); context.lineTo(px, py+8); } context.stroke(); context.fillStyle='rgba(255,255,255,0.4)'; context.beginPath(); if(res.shape==='bottle') context.rect(cx-(s*.5)*.3, cy-s*.2, s*.15, s*.4); else if(res.shape==='can') context.rect(cx-(s*.6)*.3, cy-s*.25, s*.1, s*.5); else context.rect(cx-(s*.65)*.4, cy-s*.3, s*.1, s*.6); context.fill(); context.restore(); }
 function drawMUDDemo(canvasEl,typeId){ const c=canvasEl.getContext('2d'); const size=canvasEl.width; c.clearRect(0,0,size,size); const blockSize=size*.8; drawEcoBlock(c,(size-blockSize)/2,(size-blockSize)/2,blockSize,typeId); }
 function drawNext(){ const drawDesktop=(context,w,h)=>{ context.clearRect(0,0,w,h); if(nextBlocks.length<2) return; const cx=w/2-CELL_SIZE/2, cy=h/2-CELL_SIZE; drawEcoBlock(context,cx,cy,CELL_SIZE,nextBlocks[1]); drawEcoBlock(context,cx,cy+CELL_SIZE,CELL_SIZE,nextBlocks[0]); }; const drawMobile=(context,w,h)=>{ context.clearRect(0,0,w,h); if(nextBlocks.length<2) return; const cell=28, gap=8, total=cell*2+gap, startX=(w-total)/2, y=(h-cell)/2; drawEcoBlock(context,startX,y,cell,nextBlocks[1]); drawEcoBlock(context,startX+cell+gap,y,cell,nextBlocks[0]); }; drawDesktop(nextCtx,nextCanvas.width,nextCanvas.height); drawMobile(nextCtxM,nextCanvasM.width,nextCanvasM.height); }
 function drawGrid(){ ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=1; ctx.setLineDash([2,4]); ctx.beginPath(); for(let x=0;x<=COLS;x++){ ctx.moveTo(x*CELL_SIZE,0); ctx.lineTo(x*CELL_SIZE,ROWS*CELL_SIZE);} for(let y=0;y<=ROWS;y++){ ctx.moveTo(0,y*CELL_SIZE); ctx.lineTo(COLS*CELL_SIZE,y*CELL_SIZE);} ctx.stroke(); ctx.setLineDash([]); }
